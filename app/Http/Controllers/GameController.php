@@ -12,7 +12,7 @@ class GameController extends Controller
     }
 
     public function store() {
-        Game::create([
+        $game = Game::create([
             'user_id' => auth()->user()->id,
             'outcome' => request('outcome'),
             'goals' =>  request('goals'),
@@ -23,6 +23,7 @@ class GameController extends Controller
 
         return response()->json([
             'message' => 'created',
+            'id' => $game->id
         ], 200);
     }
 
