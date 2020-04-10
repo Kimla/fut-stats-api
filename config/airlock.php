@@ -13,7 +13,10 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('AIRLOCK_STATEFUL_DOMAINS', 'localhost')),
+    'stateful' => [
+        'localhost',
+        'futapi.kimlarsson.se'
+    ],
 
     /*
     |--------------------------------------------------------------------------
