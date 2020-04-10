@@ -39,4 +39,12 @@ class GameController extends Controller
             'message' => 'updated'
         ], 200);
     }
+
+    public function destroy(Game $game) {
+        $game->delete();
+
+        return response()->json([
+            'message' => 'deleted.',
+        ], 200);
+    }
 }
