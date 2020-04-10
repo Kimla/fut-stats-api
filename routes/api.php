@@ -18,6 +18,8 @@ Route::post('/auth/login', 'UserController@login');
 Route::post('/auth/logout', 'UserController@logout');
 Route::post('/auth/register', 'UserController@register');
 
-Route::get('/games', 'GameController@index');
-Route::post('/games', 'GameController@store');
-Route::put('/games/{game}', 'GameController@update');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/games', 'GameController@index');
+    Route::post('/games', 'GameController@store');
+    Route::put('/games/{game}', 'GameController@update');
+});
