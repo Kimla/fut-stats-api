@@ -15,7 +15,9 @@ return [
 
     'stateful' => [
         'localhost',
-        'futapi.kimlarsson.se'
+        'futapi.kimlarsson.se',
+        'fut.kimlarsson.se',
+        'kimlarsson.se'
     ],
 
     /*
