@@ -26,4 +26,8 @@ class WeekendLeagueController extends Controller
             'item' => $weekendLeague,
         ], 200);
     }
+
+    public function temp() {
+        return \App\Game::where('user_id', auth()->user()->id)->update('weekend_league_id', 1);
+    }
 }
