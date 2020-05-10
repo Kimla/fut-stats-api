@@ -8,7 +8,14 @@ use Illuminate\Http\Request;
 class WeekendLeagueController extends Controller
 {
     public function index() {
-        return WeekendLeague::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->get();
+        return WeekendLeague::where('user_id', auth()->user()->id)
+            ->orderBy('id', 'desc')
+            ->get()
+            ->each(function ($item, $key) {
+                $item->withScore();
+                return $item;
+            })
+            ->all();
     }
 
     public function get(WeekendLeague $weekendLeague) {
@@ -23,7 +30,7 @@ class WeekendLeagueController extends Controller
 
         return response()->json([
             'message' => 'created',
-            'item' => $weekendLeague,
+            'item' => $weekendLeague->withScore(),
         ], 200);
     }
 }
