@@ -12,4 +12,9 @@ class Game extends Model
         'overtime' => 'boolean',
         'penalties' => 'boolean'
     ];
+
+    public function weekendLeague()
+    {
+        return $this->belongsTo('App\WeekendLeague');
+    }
 }

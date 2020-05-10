@@ -19,6 +19,10 @@ Route::post('/auth/logout', 'UserController@logout');
 Route::post('/auth/register', 'UserController@register');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/weekend-leagues', 'WeekendLeagueController@index');
+    Route::post('/weekend-leagues', 'WeekendLeagueController@store');
+    Route::get('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@get');
+
     Route::get('/games', 'GameController@index');
     Route::post('/games', 'GameController@store');
     Route::put('/games/{game}', 'GameController@update');

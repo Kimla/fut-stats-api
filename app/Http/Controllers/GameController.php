@@ -7,12 +7,9 @@ use App\Game;
 
 class GameController extends Controller
 {
-    public function index() {
-        return Game::where('user_id', auth()->user()->id)->get();
-    }
-
     public function store() {
         $game = Game::create([
+            'weekend_league_id' => request('weekend_league_id'),
             'user_id' => auth()->user()->id,
             'outcome' => request('outcome'),
             'goals' =>  request('goals'),
