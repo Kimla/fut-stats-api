@@ -31,7 +31,7 @@ module.exports = {
         appleMobileWebAppStatusBarStyle: '#667eea',
         workboxPluginMode: 'GenerateSW',
         workboxOptions: {
-            exclude: /api.php$/
+            exclude: /api\.php$/
         }
     }
 };
