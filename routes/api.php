@@ -23,6 +23,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/weekend-leagues', 'WeekendLeagueController@store');
     Route::get('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@get');
 
+    Route::get('/player-price-watch', 'PlayerPriceWatchController@index');
+    Route::post('/player-price-watch', 'PlayerPriceWatchController@store');
+    Route::get('/player-price-watch/{playerPriceWatch}', 'PlayerPriceWatchController@update');
+    Route::delete('/player-price-watch/{playerPriceWatch}', 'PlayerPriceWatchController@destroy');
+
     Route::get('/games', 'GameController@index');
     Route::post('/games', 'GameController@store');
     Route::put('/games/{game}', 'GameController@update');
