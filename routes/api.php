@@ -18,10 +18,6 @@ Route::post('/auth/login', 'UserController@login');
 Route::post('/auth/logout', 'UserController@logout');
 Route::post('/auth/register', 'UserController@register');
 
-Route::get('/test', function () {
-    return 'test';
-});
-
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/weekend-leagues', 'WeekendLeagueController@index');
     Route::post('/weekend-leagues', 'WeekendLeagueController@store');
