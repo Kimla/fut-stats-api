@@ -12,7 +12,7 @@
 
             <li class="w-1/5">
                 <router-link
-                    to="/watch"
+                    to="/team"
                     class="link text-gray-700 block p-4"
                 >
                     <UsersIcon class="w-6 h-6 m-auto" />
@@ -21,7 +21,7 @@
 
             <li class="w-1/5">
                 <router-link
-                    to="/inbox"
+                    to="/watch"
                     class="link text-gray-700 block p-4"
                 >
                     <InboxIcon class="w-6 h-6 m-auto" />

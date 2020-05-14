@@ -29,6 +29,12 @@ const routes = [
         component: () => import(/* webpackChunkName: "PlayerWatch" */ '../views/PlayerWatch.vue')
     },
     {
+        path: '/team',
+        name: 'Team',
+        meta: { requiresAuth: true },
+        component: () => import(/* webpackChunkName: "Team" */ '../views/Team.vue')
+    },
+    {
         path: '/login',
         name: 'Login',
         meta: { guestOnly: true },
