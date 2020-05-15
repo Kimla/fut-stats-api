@@ -133,8 +133,12 @@ export default {
         },
 
         async handleSubmit () {
+            const imagePaths = this.selectedPlayer.image.split('/');
+            const endPaths = imagePaths[imagePaths.length - 1].split('.');
+            const id = endPaths[0];
+
             const res = await apiClient.post('/player-price-watch', {
-                futbin_id: this.selectedPlayer.id,
+                futbin_id: id,
                 title: `${this.selectedPlayer.full_name} (${this.selectedPlayer.rating})`,
                 min_amount: this.newWatcher.min_amount,
                 max_amount: this.newWatcher.max_amount
