@@ -24,6 +24,7 @@
 <script>
 import Navbar from './components/layout/Navbar';
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
     components: {
@@ -32,6 +33,11 @@ export default {
 
     computed: {
         ...mapGetters('auth', ['loggedIn'])
+    },
+
+    created () {
+        axios.defaults.withCredentials = true;
+        axios.get('/api/sanctum/csrf-cookie');
     }
 };
 </script>

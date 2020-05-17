@@ -58,7 +58,6 @@ import AuthTop from '@/components/auth/AuthTop';
 import AuthField from '@/components/auth/AuthField';
 import AuthLink from '@/components/auth/AuthLink';
 import Button from '@/components/ui/Button';
-import axios from 'axios';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -76,11 +75,6 @@ export default {
 
     computed: {
         ...mapGetters('auth', ['authUser', 'error', 'loading'])
-    },
-
-    created () {
-        axios.defaults.withCredentials = true;
-        axios.get('/airlock/csrf-cookie');
     },
 
     methods: {

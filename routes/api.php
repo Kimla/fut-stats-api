@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get( '/sanctum/csrf-cookie',  function () {
+    return new Response('', 204);
+});
 
 Route::post('/auth/login', 'UserController@login');
 Route::post('/auth/logout', 'UserController@logout');
