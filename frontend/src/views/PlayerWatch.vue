@@ -47,17 +47,35 @@
             <form @submit.prevent="handleSubmit">
                 <div class="mb-6">
                     <label
-                        for="amount"
+                        for="min_amount"
                         class="inline-block mb-2"
                     >
                         Watch lower than
                     </label>
 
                     <input
-                        id="amount"
-                        v-model="amount"
+                        id="min_amount"
+                        v-model="newWatcher.min_amount"
                         type="number"
-                        name="amount"
+                        name="min_amount"
+                        class="bg-gray-200 p-3 block w-full rounded transition"
+                        required
+                    >
+                </div>
+
+                <div class="mb-6">
+                    <label
+                        for="max_amount"
+                        class="inline-block mb-2"
+                    >
+                        Watch higher than
+                    </label>
+
+                    <input
+                        id="max_amount"
+                        v-model="newWatcher.max_amount"
+                        type="number"
+                        name="max_amount"
                         class="bg-gray-200 p-3 block w-full rounded transition"
                         required
                     >
@@ -75,6 +93,7 @@
 <script>
 import axios from 'axios';
 import Button from '@/components/ui/Button';
+import { apiClient } from '@/services/API';
 
 export default {
     components: {
@@ -83,9 +102,18 @@ export default {
 
     data: () => ({
         selectedPlayer: null,
-        amount: null,
+        newWatcher: {
+            min_amount: null,
+            max_amount: null
+        },
         players: []
     }),
+
+    async mounted () {
+        const res = await apiClient.get('/player-price-watch');
+
+        console.log(res);
+    },
 
     methods: {
         async search (searchTerm) {
@@ -104,7 +132,23 @@ export default {
             this.selectedPlayer = player;
         },
 
-        handleSubmit () {
+        async handleSubmit () {
+            const imagePaths = this.selectedPlayer.image.split('/');
+            const endPaths = imagePaths[imagePaths.length - 1].split('.');
+            const id = endPaths[0];
+
+            const res = await apiClient.post('/player-price-watch', {
+                futbin_id: id,
+                title: `${this.selectedPlayer.full_name} (${this.selectedPlayer.rating})`,
+                min_amount: this.newWatcher.min_amount,
+                max_amount: this.newWatcher.max_amount
+            });
+
+            if (res) {
+                this.selectPlayer = null;
+                this.newWatcher = {};
+                this.players = [];
+            }
         }
     }
 };
