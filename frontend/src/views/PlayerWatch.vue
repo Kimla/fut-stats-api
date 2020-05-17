@@ -110,9 +110,7 @@ export default {
     }),
 
     async mounted () {
-        const res = await apiClient.get('/player-price-watch');
-
-        console.log(res);
+        // const res = await apiClient.get('/player-price-watch');
     },
 
     methods: {
