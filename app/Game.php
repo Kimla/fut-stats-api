@@ -17,4 +17,9 @@ class Game extends Model
     {
         return $this->belongsTo('App\WeekendLeague');
     }
+
+    public function playerStatistics()
+    {
+        return $this->hasMany('App\PlayerStatistic');
+    }
 }

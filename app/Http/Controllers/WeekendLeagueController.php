@@ -19,7 +19,7 @@ class WeekendLeagueController extends Controller
     }
 
     public function get(WeekendLeague $weekendLeague) {
-        return $weekendLeague->load('games');
+        return $weekendLeague->load('games', 'games.playerStatistics', 'games.playerStatistics.player');
     }
 
     public function store() {

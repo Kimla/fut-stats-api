@@ -96,10 +96,13 @@
             <table class="table-auto w-full mt-8">
                 <thead>
                     <tr>
-                        <th class="py-2 pr-4 border-b text-sm text-left">
+                        <th class="py-2 pr-2 border-b text-sm text-left">
                             Player
                         </th>
-                        <th class="pr-2 py-2 border-b text-sm w-12">
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            R
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
                             G
                         </th>
                         <th class="pl-2 py-2 border-b text-sm w-12">
@@ -110,16 +113,26 @@
 
                 <tbody>
                     <tr
-                        v-for="player in players"
-                        :key="player.id"
+                        v-for="playerStatistic in playerStatistics"
+                        :key="playerStatistic.player_id"
                     >
-                        <td class="border-b pr-4 py-2">
-                            {{ player.name }}
+                        <td class="border-b pr-2 py-2">
+                            {{ playerStatistic.player.name }}
                         </td>
 
-                        <td class="border-b pr-2 py-2 w-12">
+                        <td class="border-b pl-2 py-2 w-12">
                             <AppSelect
-                                v-model.number="player.goals"
+                                v-model.number="playerStatistic.rating"
+                                :items="selectPlayerRating"
+                                name="goals"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="playerStatistic.goals"
                                 :items="selectNumberItems"
                                 name="goals"
                                 size="sm"
@@ -129,7 +142,7 @@
 
                         <td class="border-b pl-2 py-2 w-12">
                             <AppSelect
-                                v-model.number="player.assists"
+                                v-model.number="playerStatistic.assists"
                                 :items="selectNumberItems"
                                 name="assists"
                                 size="sm"
@@ -173,7 +186,7 @@ export default {
             overtime: false,
             penalties: false
         },
-        players: [],
+        playerStatistics: [],
         loading: false,
         isNew: true
     }),
@@ -187,6 +200,17 @@ export default {
             }
 
             return items;
+        },
+
+        selectPlayerRating () {
+            const items = [];
+
+            for (let i = 0; i < 101; i++) {
+                const rating = (i * 0.1).toFixed(1);
+                items.push({ label: rating, value: rating });
+            }
+
+            return items;
         }
     },
 
@@ -195,16 +219,23 @@ export default {
 
         if (this.game) {
             this.formData = { ...this.game };
+            this.playerStatistics = this.game.player_statistics.map(playerStatistic => ({
+                ...playerStatistic,
+                rating: playerStatistic.rating.toFixed(1)
+            }));
+
             this.isNew = false;
+        } else {
+            const res = await apiClient('/team-players');
+
+            this.playerStatistics = res.data.map(player => ({
+                rating: (0.0).toFixed(1),
+                goals: 0,
+                assists: 0,
+                player_id: player.id,
+                player: player
+            }));
         }
-
-        const res = await apiClient('/team-players');
-
-        this.players = res.data.map(player => ({
-            goals: 0,
-            assists: 0,
-            ...player
-        }));
     },
 
     methods: {
@@ -228,13 +259,19 @@ export default {
         },
 
         async update () {
-            const res = await apiClient.put(`/games/${this.game.id}`, this.formData);
+            const res = await apiClient.put(`/games/${this.game.id}`, {
+                playerStatistics: this.playerStatistics,
+                ...this.formData
+            });
 
             return res;
         },
 
         async add () {
-            const res = await apiClient.post('/games', this.formData);
+            const res = await apiClient.post('/games', {
+                playerStatistics: this.playerStatistics,
+                ...this.formData
+            });
 
             return res.data.id;
         },

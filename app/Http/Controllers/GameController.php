@@ -18,6 +18,8 @@ class GameController extends Controller
             'penalties' =>  request('penalties'),
         ]);
 
+        $this->syncPlayerStatistics($game, request('playerStatistics'));
+
         return response()->json([
             'message' => 'created',
             'id' => $game->id
@@ -33,6 +35,8 @@ class GameController extends Controller
             'penalties' =>  request('penalties'),
         ]);
 
+        $this->syncPlayerStatistics($game, request('playerStatistics'));
+
         return response()->json([
             'message' => 'updated'
         ], 200);
@@ -44,5 +48,21 @@ class GameController extends Controller
         return response()->json([
             'message' => 'deleted.',
         ], 200);
+    }
+
+    protected function syncPlayerStatistics(Game $game, array $playerStatistics) {
+        collect($playerStatistics)->each(function ($item) use ($game) {
+            $data = [
+                'player_id' => $item['player_id'],
+                'rating' =>  $item['rating'],
+                'goals' =>  $item['goals'],
+                'assists' =>  $item['assists'],
+            ];
+
+            $game->playerStatistics()->updateOrCreate(
+                ['player_id' => $item['player_id']],
+                $data
+            );
+        });
     }
 }
