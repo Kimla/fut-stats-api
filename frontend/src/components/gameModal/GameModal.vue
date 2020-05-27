@@ -213,7 +213,7 @@ export default {
                 items.push({ label: rating, value: rating });
             }
 
-            return items;
+            return items.reverse();
         }
     },
 
