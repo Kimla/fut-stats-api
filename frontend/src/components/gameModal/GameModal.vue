@@ -1,11 +1,41 @@
 <template>
-    <div class="w-full h-full top-0 left-0 fixed p-8 z-50 flex items-center">
+    <div
+        class="w-full h-full top-0 left-0 fixed z-50"
+        style="padding-top: 56px;"
+    >
         <div
             class="absolute top-0 left-0 w-full h-full bg-gray-900 opacity-50"
             @click="close"
         ></div>
 
-        <div class="py-8 px-6 bg-white relative w-full m-auto overflow-auto max-h-full">
+        <nav class="navbar absolute top-0 left-0 bg-white w-full z-50 shadow w-full flex items-center justify-between">
+            <button
+                type="button"
+                class="link text-gray-700 block p-4 mr-4"
+                @click="close"
+            >
+                <ChevronLeftIcon class="w-6 h-6 m-auto" />
+            </button>
+
+            <div class="px-4 flex">
+                <Button
+                    v-if="!isNew"
+                    label="Delete"
+                    bg="bg-red-600"
+                    size="sm"
+                    @click.native="remove"
+                />
+
+                <Button
+                    label="Save"
+                    size="sm"
+                    class="ml-5"
+                    @click.native="save"
+                />
+            </div>
+        </nav>
+
+        <div class="py-8 px-6 bg-white relative w-full h-full overflow-auto max-h-full">
             <FormGroup
                 label="Outcome"
                 name="outcome"
@@ -62,21 +92,6 @@
                     @input="val => formData.penalties = val == 'true' ? true : false"
                 />
             </FormGroup>
-
-            <div class="mt-5">
-                <Button
-                    class="mb-4"
-                    label="Save"
-                    @click.native="save"
-                />
-
-                <Button
-                    v-if="!isNew"
-                    label="Delete"
-                    bg="bg-red-600"
-                    @click.native="remove"
-                />
-            </div>
         </div>
     </div>
 </template>
@@ -86,12 +101,14 @@ import { apiClient } from '@/services/API';
 import AppSelect from '../ui/AppSelect';
 import Button from '../ui/Button';
 import FormGroup from '../ui/FormGroup';
+import ChevronLeftIcon from '@/assets/chevron-left.svg';
 
 export default {
     components: {
         AppSelect,
         Button,
-        FormGroup
+        FormGroup,
+        ChevronLeftIcon
     },
 
     props: {
