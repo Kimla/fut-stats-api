@@ -224,7 +224,7 @@ export default {
             this.formData = { ...this.game };
             this.playerStatistics = this.game.player_statistics.map(playerStatistic => ({
                 ...playerStatistic,
-                rating: playerStatistic.rating.toFixed(1)
+                rating: parseFloat(playerStatistic.rating).toFixed(1)
             }));
 
             this.isNew = false;
@@ -258,7 +258,10 @@ export default {
 
             this.loading = false;
 
-            this.$emit(action, this.formData);
+            this.$emit(action, {
+                ...this.formData,
+                player_statistics: this.playerStatistics
+            });
         },
 
         async update () {
