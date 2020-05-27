@@ -37,4 +37,13 @@ class WeekendLeagueController extends Controller
             'item' => $weekendLeague->withScore(),
         ], 200);
     }
+
+    public function destroy(WeekendLeague $weekendLeague)
+    {
+        $weekendLeague->delete();
+
+        return response()->json([
+            'message' => 'deleted.',
+        ], 200);
+    }
 }

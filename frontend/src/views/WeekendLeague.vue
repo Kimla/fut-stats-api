@@ -27,6 +27,14 @@
             <p>Penalties: {{ penaltiesGames }}</p>
         </div>
 
+        <div class="w-32">
+            <Button
+                label="Delete"
+                bg="bg-red-600"
+                @click.native="removeWeekendLeague"
+            />
+        </div>
+
         <GameModal
             v-if="gameModalOpen"
             :game="gameModalData"
@@ -45,12 +53,14 @@
 <script>
 import { apiClient } from '@/services/API';
 import AddButton from '@/components/ui/AddButton';
+import Button from '@/components/ui/Button';
 import Game from '@/components/ui/Game';
 import GameModal from '@/components/gameModal/GameModal';
 
 export default {
     components: {
         AddButton,
+        Button,
         Game,
         GameModal
     },
@@ -168,6 +178,14 @@ export default {
         closeModal () {
             this.gameModalOpen = false;
             this.gameModalData = null;
+        },
+
+        async removeWeekendLeague () {
+            const res = await apiClient.delete(`/weekend-leagues/${this.$route.params.id}`);
+
+            if (res && res.data) {
+                this.$router.replace('/wl');
+            }
         }
     }
 };

@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/weekend-leagues', 'WeekendLeagueController@index');
     Route::post('/weekend-leagues', 'WeekendLeagueController@store');
     Route::get('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@get');
+    Route::delete('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@destroy');
 
     Route::get('/team-players', 'TeamPlayerController@index');
     Route::post('/team-players', 'TeamPlayerController@store');
