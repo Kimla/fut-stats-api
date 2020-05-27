@@ -93,7 +93,10 @@
                 />
             </FormGroup>
 
-            <table class="table-auto w-full mt-8">
+            <table
+                v-if="playerStatistics && playerStatistics.length > 0"
+                class="table-auto w-full mt-8"
+            >
                 <thead>
                     <tr>
                         <th class="py-2 pr-2 border-b text-sm text-left">
