@@ -8,9 +8,9 @@
             <div
                 v-for="player in players"
                 :key="player"
-                class="bg-white w-full flex justify-between shadow py-2 px-4 mb-3 text-xl relative"
+                class="bg-white w-full flex items-center justify-between shadow py-2 px-4 mb-3 text-xl relative"
             >
-                <p>
+                <p class="pr-6">
                     {{ player.name }}
                 </p>
 
