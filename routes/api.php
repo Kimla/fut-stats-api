@@ -28,6 +28,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/weekend-leagues', 'WeekendLeagueController@store');
     Route::get('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@get');
 
+    Route::get('/team-players', 'TeamPlayerController@index');
+    Route::post('/team-players', 'TeamPlayerController@store');
+    Route::delete('/team-players/{teamPlayer}', 'TeamPlayerController@destroy');
+
     Route::get('/player-price-watch', 'PlayerPriceWatchController@index');
     Route::post('/player-price-watch', 'PlayerPriceWatchController@store');
     Route::get('/player-price-watch/{playerPriceWatch}', 'PlayerPriceWatchController@update');

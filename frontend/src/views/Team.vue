@@ -11,13 +11,13 @@
                 class="bg-white w-full flex justify-between shadow py-2 px-4 mb-3 text-xl relative"
             >
                 <p>
-                    {{ player }}
+                    {{ player.name }}
                 </p>
 
                 <button
                     type="button"
                     class="text-gray-700"
-                    @click="removePlayer(player)"
+                    @click="removePlayer(player.id)"
                 >
                     <RemoveIcon class="w-6 h-6" />
                 </button>
@@ -56,6 +56,7 @@
 <script>
 import Button from '@/components/ui/Button';
 import RemoveIcon from '@/assets/x-circle.svg';
+import { apiClient } from '@/services/API';
 
 export default {
     components: {
@@ -68,17 +69,35 @@ export default {
         newPlayer: null
     }),
 
+    async created () {
+        const res = await apiClient('/team-players');
+
+        this.players = res.data;
+    },
+
     methods: {
-        addPlayer () {
-            this.players.push(this.newPlayer);
+        async addPlayer () {
+            const res = await apiClient.post('/team-players', {
+                name: this.newPlayer
+            });
 
             this.newPlayer = null;
+
+            if (res) {
+                this.players.push(res.data.player);
+            }
         },
 
-        removePlayer (player) {
-            const index = this.players.indexOf(player);
+        async removePlayer (id) {
+            const res = await apiClient.delete(`/team-players/${id}`, {
+                name: this.newPlayer
+            });
 
-            this.players.splice(index);
+            if (res) {
+                const player = this.players.find(p => p.id === id);
+                const index = this.players.indexOf(player);
+                this.players.splice(index, 1);
+            }
         }
     }
 };
