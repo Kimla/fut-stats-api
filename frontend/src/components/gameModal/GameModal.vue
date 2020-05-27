@@ -6,141 +6,92 @@
         ></div>
 
         <div class="py-8 px-6 bg-white relative w-full m-auto overflow-auto max-h-full">
-            <div class="mb-3">
-                <label
-                    class="inline-block mb-2"
-                    for="outcome"
-                >
-                    Outcome
-                </label>
-                <select
-                    id="outcome"
+            <FormGroup
+                label="Outcome"
+                name="outcome"
+            >
+                <AppSelect
                     v-model="formData.outcome"
+                    :items="[{ label: 'Win', value: 'win' }, { label: 'Loss', value: 'loss' }]"
                     name="outcome"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option value="win">
-                        Win
-                    </option>
-                    <option value="loss">
-                        Loss
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    for="goals"
-                    class="inline-block mb-2"
-                >
-                    Goals
-                </label>
-                <select
-                    id="goals"
-                    v-model="formData.goals"
+            <FormGroup
+                label="Goals"
+                name="goals"
+            >
+                <AppSelect
+                    v-model.number="formData.goals"
+                    :items="selectNumberItems"
                     name="goals"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option
-                        v-for="i in 21"
-                        :key="i"
-                        :value="i - 1"
-                    >
-                        {{ i - 1 }}
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    for="conceded"
-                    class="inline-block mb-2"
-                >
-                    Conceded
-                </label>
-                <select
-                    id="conceded"
-                    v-model="formData.conceded"
+            <FormGroup
+                label="Goals"
+                name="Conceded"
+            >
+                <AppSelect
+                    v-model.number="formData.conceded"
+                    :items="selectNumberItems"
                     name="conceded"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option
-                        v-for="i in 21"
-                        :key="i"
-                        :value="i - 1"
-                    >
-                        {{ i - 1 }}
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    class="inline-block mb-2"
-                    for="overtime"
-                >
-                    Overtime
-                </label>
-                <select
-                    id="overtime"
-                    v-model="formData.overtime"
+            <FormGroup
+                label="Overtime"
+                name="overtime"
+            >
+                <AppSelect
+                    :value="formData.overtime"
+                    :items="[{ label: 'No', value: false }, { label: 'Yes', value: true }]"
                     name="overtime"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option :value="false">
-                        No
-                    </option>
-                    <option :value="true">
-                        Yes
-                    </option>
-                </select>
-            </div>
+                    @input="val => formData.overtime = val == 'true' ? true : false"
+                />
+            </FormGroup>
 
-            <div class="mb-5">
-                <label
-                    class="inline-block mb-2"
-                    for="penalties"
-                >
-                    Penalties
-                </label>
-                <select
-                    id="penalties"
-                    v-model="formData.penalties"
+            <FormGroup
+                label="Penalties"
+                name="penalties"
+            >
+                <AppSelect
+                    :value="formData.penalties"
+                    :items="[{ label: 'No', value: false }, { label: 'Yes', value: true }]"
                     name="penalties"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option :value="false">
-                        No
-                    </option>
-                    <option :value="true">
-                        Yes
-                    </option>
-                </select>
+                    @input="val => formData.penalties = val == 'true' ? true : false"
+                />
+            </FormGroup>
+
+            <div class="mt-5">
+                <Button
+                    class="mb-4"
+                    label="Save"
+                    @click.native="save"
+                />
+
+                <Button
+                    v-if="!isNew"
+                    label="Delete"
+                    bg="bg-red-600"
+                    @click.native="remove"
+                />
             </div>
-
-            <Button
-                class="mb-4"
-                label="Save"
-                @click.native="save"
-            />
-
-            <Button
-                v-if="!isNew"
-                label="Delete"
-                bg="bg-red-600"
-                @click.native="remove"
-            />
         </div>
     </div>
 </template>
 
 <script>
 import { apiClient } from '@/services/API';
+import AppSelect from '../ui/AppSelect';
 import Button from '../ui/Button';
+import FormGroup from '../ui/FormGroup';
 
 export default {
     components: {
-        Button
+        AppSelect,
+        Button,
+        FormGroup
     },
 
     props: {
@@ -161,6 +112,18 @@ export default {
         loading: false,
         isNew: true
     }),
+
+    computed: {
+        selectNumberItems () {
+            const items = [];
+
+            for (let i = 0; i < 21; i++) {
+                items.push({ label: i, value: i });
+            }
+
+            return items;
+        }
+    },
 
     created () {
         this.formData.weekend_league_id = this.$route.params.id;
