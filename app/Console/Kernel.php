@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Http;
+use App\PlayerPriceWatch;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +26,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            $player = PlayerPriceWatch::first();
+
+            $response = Http::get("https://www.futbin.com/20/playerPrices?player={$player->futbin_id}");
+
+            $price = $response->json()[$player->futbin_id]['prices']['ps']['LCPrice'];
+            $price = (int) str_replace(',', '', $price);
+
+            if ($player->min_amount && $player->min_amount >= $price) {
+                dd('notify min');
+            }
+
+            if ($player->max_amount && $price >= $player->max_amount) {
+                dd('notify max');
+            }
+        })->everyMinute();
     }
 
     /**
