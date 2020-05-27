@@ -15,6 +15,6 @@ class PlayerStatistic extends Model
 
     public function player()
     {
-        return $this->belongsTo('App\TeamPlayer');
+        return $this->belongsTo('App\TeamPlayer')->withTrashed();
     }
 }
