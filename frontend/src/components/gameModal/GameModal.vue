@@ -60,7 +60,7 @@
 
             <FormGroup
                 label="Goals"
-                name="Conceded"
+                name="conceded"
             >
                 <AppSelect
                     v-model.number="formData.conceded"
@@ -92,6 +92,53 @@
                     @input="val => formData.penalties = val == 'true' ? true : false"
                 />
             </FormGroup>
+
+            <table class="table-auto w-full mt-8">
+                <thead>
+                    <tr>
+                        <th class="py-2 pr-4 border-b text-sm text-left">
+                            Player
+                        </th>
+                        <th class="pr-2 py-2 border-b text-sm w-12">
+                            G
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            A
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        v-for="player in players"
+                        :key="player.id"
+                    >
+                        <td class="border-b pr-4 py-2">
+                            {{ player.name }}
+                        </td>
+
+                        <td class="border-b pr-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="player.goals"
+                                :items="selectNumberItems"
+                                name="goals"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="player.assists"
+                                :items="selectNumberItems"
+                                name="assists"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -126,6 +173,7 @@ export default {
             overtime: false,
             penalties: false
         },
+        players: [],
         loading: false,
         isNew: true
     }),
@@ -142,13 +190,21 @@ export default {
         }
     },
 
-    created () {
+    async created () {
         this.formData.weekend_league_id = this.$route.params.id;
 
         if (this.game) {
             this.formData = { ...this.game };
             this.isNew = false;
         }
+
+        const res = await apiClient('/team-players');
+
+        this.players = res.data.map(player => ({
+            goals: 0,
+            assists: 0,
+            ...player
+        }));
     },
 
     methods: {
