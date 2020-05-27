@@ -7,7 +7,7 @@
         <div class="mb-10 pb-10 border-b-2">
             <div
                 v-for="player in players"
-                :key="player"
+                :key="player.id"
                 class="bg-white w-full flex items-center justify-between shadow py-2 px-4 mb-3 text-xl relative"
             >
                 <p class="pr-6">
