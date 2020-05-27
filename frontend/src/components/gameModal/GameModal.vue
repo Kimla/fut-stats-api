@@ -103,13 +103,13 @@
                             Player
                         </th>
                         <th class="pl-2 py-2 border-b text-sm w-12">
-                            R
-                        </th>
-                        <th class="pl-2 py-2 border-b text-sm w-12">
                             G
                         </th>
                         <th class="pl-2 py-2 border-b text-sm w-12">
                             A
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            R
                         </th>
                     </tr>
                 </thead>
@@ -121,16 +121,6 @@
                     >
                         <td class="border-b pr-2 py-2">
                             {{ playerStatistic.player.name }}
-                        </td>
-
-                        <td class="border-b pl-2 py-2 w-12">
-                            <AppSelect
-                                v-model.number="playerStatistic.rating"
-                                :items="selectPlayerRating"
-                                name="goals"
-                                size="sm"
-                                style="text-align-last:center;"
-                            />
                         </td>
 
                         <td class="border-b pl-2 py-2 w-12">
@@ -148,6 +138,16 @@
                                 v-model.number="playerStatistic.assists"
                                 :items="selectNumberItems"
                                 name="assists"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="playerStatistic.rating"
+                                :items="selectPlayerRating"
+                                name="rating"
                                 size="sm"
                                 style="text-align-last:center;"
                             />
