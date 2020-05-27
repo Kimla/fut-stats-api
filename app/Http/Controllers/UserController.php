@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,10 +23,11 @@ class UserController extends Controller
         return response()->json([
             'message'=> 'Registration successful',
             'user'=> $user,
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
         ], 200);
     }
-      /**
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -55,6 +56,7 @@ class UserController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
     protected function guard()
     {
         return Auth::guard();
@@ -66,10 +68,11 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $token = Auth::user()->createToken('token-name');
+
             return response()->json([
                 'message' => 'Login successful',
                 'user' => Auth::user(),
-                'token' => $token->plainTextToken
+                'token' => $token->plainTextToken,
             ], 200);
         }
 
@@ -79,6 +82,7 @@ class UserController extends Controller
     public function logout()
     {
         Auth::logout();
+
         return response()->json(['message' => 'Logged Out'], 200);
     }
 }

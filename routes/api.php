@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +14,7 @@ use Illuminate\Http\Response;
 |
 */
 
-Route::get( '/sanctum/csrf-cookie',  function () {
+Route::get('/sanctum/csrf-cookie', function () {
     return new Response('', 204);
 });
 

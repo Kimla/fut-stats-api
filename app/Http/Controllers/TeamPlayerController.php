@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\TeamPlayer;
+use Illuminate\Http\Request;
 
 class TeamPlayerController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return TeamPlayer::where('user_id', auth()->user()->id)->get();
     }
 
-    public function store() {
+    public function store()
+    {
         $player = TeamPlayer::create([
             'name' => request('name'),
             'user_id' => auth()->user()->id,
@@ -19,11 +21,12 @@ class TeamPlayerController extends Controller
 
         return response()->json([
             'message' => 'created',
-            'player' => $player
+            'player' => $player,
         ], 200);
     }
 
-    public function destroy(TeamPlayer $teamPlayer) {
+    public function destroy(TeamPlayer $teamPlayer)
+    {
         $teamPlayer->delete();
 
         return response()->json([

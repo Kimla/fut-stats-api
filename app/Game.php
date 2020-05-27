@@ -10,7 +10,7 @@ class Game extends Model
 
     protected $casts = [
         'overtime' => 'boolean',
-        'penalties' => 'boolean'
+        'penalties' => 'boolean',
     ];
 
     public function weekendLeague()
