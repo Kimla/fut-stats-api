@@ -234,7 +234,9 @@ export default {
                     players[player.id].rating += player.rating;
                     players[player.id].goals += player.goals;
                     players[player.id].assists += player.assists;
-                    players[player.id].games++;
+                    if (player.rating > 0) {
+                        players[player.id].games++;
+                    }
                 }
 
                 return players;
