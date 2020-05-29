@@ -25,6 +25,87 @@
             <p>Conceds per game: {{ concedsPerGame }}</p>
             <p>Overtime: {{ overtimeGames }}</p>
             <p>Penalties: {{ penaltiesGames }}</p>
+
+            <table
+                v-if="players && players.length > 0"
+                class="table-auto w-full mt-3"
+            >
+                <thead>
+                    <tr>
+                        <th class="py-2 pr-2 border-b text-sm text-left">
+                            Player
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-10">
+                            G
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-10">
+                            A
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-10">
+                            P
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            R
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr
+                        v-for="player in players"
+                        :key="player.id"
+                    >
+                        <td class="border-b pr-2 py-2">
+                            {{ player.name }}
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-10 text-center">
+                            {{ player.goals }}
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-10 text-center">
+                            {{ player.assists }}
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-10 text-center">
+                            {{ player.games }}
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12 text-center">
+                            {{ player.rating }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div
+                v-if="players && players.length > 0"
+                class="mt-5"
+            >
+                <p class="text-sm mb-1">
+                    G = Goals
+                </p>
+
+                <p class="text-sm mb-1">
+                    A = Assists
+                </p>
+
+                <p class="text-sm mb-1">
+                    P = Games played
+                </p>
+
+                <p class="text-sm mb-1">
+                    R = Rating
+                </p>
+            </div>
+        </div>
+
+        <div class="w-32">
+            <Button
+                label="Delete"
+                bg="bg-red-600"
+                @click.native="removeWeekendLeague"
+            />
         </div>
 
         <GameModal
@@ -45,12 +126,14 @@
 <script>
 import { apiClient } from '@/services/API';
 import AddButton from '@/components/ui/AddButton';
+import Button from '@/components/ui/Button';
 import Game from '@/components/ui/Game';
 import GameModal from '@/components/gameModal/GameModal';
 
 export default {
     components: {
         AddButton,
+        Button,
         Game,
         GameModal
     },
@@ -126,6 +209,43 @@ export default {
             });
 
             return `${wins} - ${losses}`;
+        },
+
+        players () {
+            const playersObject = this.games.map(game => {
+                return game.player_statistics.map(playerStatistic => ({
+                    id: playerStatistic.player.id,
+                    name: playerStatistic.player.name,
+                    rating: playerStatistic.rating,
+                    goals: playerStatistic.goals,
+                    assists: playerStatistic.assists
+                }));
+            }).flat(1).reduce((players, player) => {
+                if (!players[player.id]) {
+                    players[player.id] = {
+                        id: player.id,
+                        name: player.name,
+                        rating: player.rating,
+                        goals: player.goals,
+                        assists: player.assists,
+                        games: 1
+                    };
+                } else {
+                    players[player.id].rating += player.rating;
+                    players[player.id].goals += player.goals;
+                    players[player.id].assists += player.assists;
+                    players[player.id].games++;
+                }
+
+                return players;
+            }, {});
+
+            return Object.values(playersObject)
+                .map(player => {
+                    player.rating = (player.rating / player.games).toFixed(2);
+                    return player;
+                })
+                .sort((a, b) => b.rating - a.rating);
         }
     },
 
@@ -168,6 +288,14 @@ export default {
         closeModal () {
             this.gameModalOpen = false;
             this.gameModalData = null;
+        },
+
+        async removeWeekendLeague () {
+            const res = await apiClient.delete(`/weekend-leagues/${this.$route.params.id}`);
+
+            if (res && res.data) {
+                this.$router.replace('/wl');
+            }
         }
     }
 };

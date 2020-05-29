@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +14,7 @@ use Illuminate\Http\Response;
 |
 */
 
-Route::get( '/sanctum/csrf-cookie',  function () {
+Route::get('/sanctum/csrf-cookie', function () {
     return new Response('', 204);
 });
 
@@ -27,6 +26,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/weekend-leagues', 'WeekendLeagueController@index');
     Route::post('/weekend-leagues', 'WeekendLeagueController@store');
     Route::get('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@get');
+    Route::delete('/weekend-leagues/{weekendLeague}', 'WeekendLeagueController@destroy');
+
+    Route::get('/team-players', 'TeamPlayerController@index');
+    Route::post('/team-players', 'TeamPlayerController@store');
+    Route::delete('/team-players/{teamPlayer}', 'TeamPlayerController@destroy');
 
     Route::get('/player-price-watch', 'PlayerPriceWatchController@index');
     Route::post('/player-price-watch', 'PlayerPriceWatchController@store');

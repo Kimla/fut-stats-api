@@ -4,9 +4,7 @@
             Weekend leagues
         </h1>
 
-        <div
-            class="mb-10 pb-10 border-b-2"
-        >
+        <div class="mb-10 pb-10 border-b-2">
             <router-link
                 v-for="weekendLeague in weekendLeagues"
                 :key="weekendLeague.id"

@@ -1,146 +1,177 @@
 <template>
-    <div class="w-full h-full top-0 left-0 fixed p-8 z-50 flex items-center">
+    <div
+        class="w-full h-full top-0 left-0 fixed z-50"
+        style="padding-top: 56px;"
+    >
         <div
             class="absolute top-0 left-0 w-full h-full bg-gray-900 opacity-50"
             @click="close"
         ></div>
 
-        <div class="py-8 px-6 bg-white relative w-full m-auto overflow-auto max-h-full">
-            <div class="mb-3">
-                <label
-                    class="inline-block mb-2"
-                    for="outcome"
-                >
-                    Outcome
-                </label>
-                <select
-                    id="outcome"
+        <nav class="navbar absolute top-0 left-0 bg-white w-full z-50 shadow w-full flex items-center justify-between">
+            <button
+                type="button"
+                class="link text-gray-700 block p-4 mr-4"
+                @click="close"
+            >
+                <ChevronLeftIcon class="w-6 h-6 m-auto" />
+            </button>
+
+            <div class="px-4 flex">
+                <Button
+                    v-if="!isNew"
+                    label="Delete"
+                    bg="bg-red-600"
+                    size="sm"
+                    @click.native="remove"
+                />
+
+                <Button
+                    label="Save"
+                    size="sm"
+                    class="ml-5"
+                    @click.native="save"
+                />
+            </div>
+        </nav>
+
+        <div class="py-8 px-6 bg-white relative w-full h-full overflow-auto max-h-full">
+            <FormGroup
+                label="Outcome"
+                name="outcome"
+            >
+                <AppSelect
                     v-model="formData.outcome"
+                    :items="[{ label: 'Win', value: 'win' }, { label: 'Loss', value: 'loss' }]"
                     name="outcome"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option value="win">
-                        Win
-                    </option>
-                    <option value="loss">
-                        Loss
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    for="goals"
-                    class="inline-block mb-2"
-                >
-                    Goals
-                </label>
-                <select
-                    id="goals"
-                    v-model="formData.goals"
+            <FormGroup
+                label="Goals"
+                name="goals"
+            >
+                <AppSelect
+                    v-model.number="formData.goals"
+                    :items="selectNumberItems"
                     name="goals"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option
-                        v-for="i in 21"
-                        :key="i"
-                        :value="i - 1"
-                    >
-                        {{ i - 1 }}
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    for="conceded"
-                    class="inline-block mb-2"
-                >
-                    Conceded
-                </label>
-                <select
-                    id="conceded"
-                    v-model="formData.conceded"
+            <FormGroup
+                label="Goals"
+                name="conceded"
+            >
+                <AppSelect
+                    v-model.number="formData.conceded"
+                    :items="selectNumberItems"
                     name="conceded"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option
-                        v-for="i in 21"
-                        :key="i"
-                        :value="i - 1"
-                    >
-                        {{ i - 1 }}
-                    </option>
-                </select>
-            </div>
+                />
+            </FormGroup>
 
-            <div class="mb-3">
-                <label
-                    class="inline-block mb-2"
-                    for="overtime"
-                >
-                    Overtime
-                </label>
-                <select
-                    id="overtime"
-                    v-model="formData.overtime"
+            <FormGroup
+                label="Overtime"
+                name="overtime"
+            >
+                <AppSelect
+                    :value="formData.overtime"
+                    :items="[{ label: 'No', value: false }, { label: 'Yes', value: true }]"
                     name="overtime"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option :value="false">
-                        No
-                    </option>
-                    <option :value="true">
-                        Yes
-                    </option>
-                </select>
-            </div>
+                    @input="val => formData.overtime = val == 'true' ? true : false"
+                />
+            </FormGroup>
 
-            <div class="mb-5">
-                <label
-                    class="inline-block mb-2"
-                    for="penalties"
-                >
-                    Penalties
-                </label>
-                <select
-                    id="penalties"
-                    v-model="formData.penalties"
+            <FormGroup
+                label="Penalties"
+                name="penalties"
+            >
+                <AppSelect
+                    :value="formData.penalties"
+                    :items="[{ label: 'No', value: false }, { label: 'Yes', value: true }]"
                     name="penalties"
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                    <option :value="false">
-                        No
-                    </option>
-                    <option :value="true">
-                        Yes
-                    </option>
-                </select>
-            </div>
+                    @input="val => formData.penalties = val == 'true' ? true : false"
+                />
+            </FormGroup>
 
-            <Button
-                class="mb-4"
-                label="Save"
-                @click.native="save"
-            />
+            <table
+                v-if="playerStatistics && playerStatistics.length > 0"
+                class="table-auto w-full mt-8"
+            >
+                <thead>
+                    <tr>
+                        <th class="py-2 pr-2 border-b text-sm text-left">
+                            Player
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            G
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            A
+                        </th>
+                        <th class="pl-2 py-2 border-b text-sm w-12">
+                            R
+                        </th>
+                    </tr>
+                </thead>
 
-            <Button
-                v-if="!isNew"
-                label="Delete"
-                bg="bg-red-600"
-                @click.native="remove"
-            />
+                <tbody>
+                    <tr
+                        v-for="playerStatistic in playerStatistics"
+                        :key="playerStatistic.player_id"
+                    >
+                        <td class="border-b pr-2 py-2">
+                            {{ playerStatistic.player.name }}
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="playerStatistic.goals"
+                                :items="selectNumberItems"
+                                name="goals"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="playerStatistic.assists"
+                                :items="selectNumberItems"
+                                name="assists"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+
+                        <td class="border-b pl-2 py-2 w-12">
+                            <AppSelect
+                                v-model.number="playerStatistic.rating"
+                                :items="selectPlayerRating"
+                                name="rating"
+                                size="sm"
+                                style="text-align-last:center;"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
 
 <script>
 import { apiClient } from '@/services/API';
+import AppSelect from '../ui/AppSelect';
 import Button from '../ui/Button';
+import FormGroup from '../ui/FormGroup';
+import ChevronLeftIcon from '@/assets/chevron-left.svg';
 
 export default {
     components: {
-        Button
+        AppSelect,
+        Button,
+        FormGroup,
+        ChevronLeftIcon
     },
 
     props: {
@@ -158,16 +189,55 @@ export default {
             overtime: false,
             penalties: false
         },
+        playerStatistics: [],
         loading: false,
         isNew: true
     }),
 
-    created () {
+    computed: {
+        selectNumberItems () {
+            const items = [];
+
+            for (let i = 0; i < 21; i++) {
+                items.push({ label: i, value: i });
+            }
+
+            return items;
+        },
+
+        selectPlayerRating () {
+            const items = [];
+
+            for (let i = 0; i < 101; i++) {
+                const rating = (i * 0.1).toFixed(1);
+                items.push({ label: rating, value: rating });
+            }
+
+            return items.reverse();
+        }
+    },
+
+    async created () {
         this.formData.weekend_league_id = this.$route.params.id;
 
         if (this.game) {
             this.formData = { ...this.game };
+            this.playerStatistics = this.game.player_statistics.map(playerStatistic => ({
+                ...playerStatistic,
+                rating: parseFloat(playerStatistic.rating).toFixed(1)
+            }));
+
             this.isNew = false;
+        } else {
+            const res = await apiClient('/team-players');
+
+            this.playerStatistics = res.data.map(player => ({
+                rating: (0.0).toFixed(1),
+                goals: 0,
+                assists: 0,
+                player_id: player.id,
+                player: player
+            }));
         }
     },
 
@@ -188,17 +258,26 @@ export default {
 
             this.loading = false;
 
-            this.$emit(action, this.formData);
+            this.$emit(action, {
+                ...this.formData,
+                player_statistics: this.playerStatistics
+            });
         },
 
         async update () {
-            const res = await apiClient.put(`/games/${this.game.id}`, this.formData);
+            const res = await apiClient.put(`/games/${this.game.id}`, {
+                playerStatistics: this.playerStatistics,
+                ...this.formData
+            });
 
             return res;
         },
 
         async add () {
-            const res = await apiClient.post('/games', this.formData);
+            const res = await apiClient.post('/games', {
+                playerStatistics: this.playerStatistics,
+                ...this.formData
+            });
 
             return res.data.id;
         },

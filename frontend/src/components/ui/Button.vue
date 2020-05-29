@@ -1,7 +1,13 @@
 <template>
     <button
-        :class="[bg]"
-        class="uppercase w-full text-white p-3 rounded tracking-wider text-sm font-medium"
+        :class="[
+            bg,
+            {
+                'p-3 text-sm': size === 'lg',
+                'py-2 px-5 text-xs': size === 'sm'
+            }
+        ]"
+        class="uppercase w-full text-white rounded tracking-wider font-medium"
         :type="type"
     >
         {{ label }}
@@ -24,6 +30,11 @@ export default {
         bg: {
             type: String,
             default: 'bg-indigo-500'
+        },
+
+        size: {
+            type: String,
+            default: 'lg'
         }
     }
 };

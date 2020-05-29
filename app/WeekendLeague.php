@@ -15,7 +15,7 @@ class WeekendLeague extends Model
 
             return $score;
         }, ['wins' => 0, 'losses' => 0]);
-        
+
         return $this;
     }
 

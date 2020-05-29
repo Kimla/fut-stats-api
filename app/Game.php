@@ -10,11 +10,16 @@ class Game extends Model
 
     protected $casts = [
         'overtime' => 'boolean',
-        'penalties' => 'boolean'
+        'penalties' => 'boolean',
     ];
 
     public function weekendLeague()
     {
         return $this->belongsTo('App\WeekendLeague');
+    }
+
+    public function playerStatistics()
+    {
+        return $this->hasMany('App\PlayerStatistic');
     }
 }
