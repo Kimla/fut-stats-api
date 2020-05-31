@@ -58,7 +58,7 @@ class GameController extends Controller
         collect($playerStatistics)->each(function ($item) use ($game) {
             $data = [
                 'player_id' => $item['player_id'],
-                'rating' => $item['rating'],
+                'rating' => $item['rating'] ?? 0,
                 'goals' => $item['goals'],
                 'assists' => $item['assists'],
             ];
