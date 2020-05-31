@@ -145,7 +145,7 @@
 
                         <td class="border-b pl-2 py-2 w-12">
                             <AppSelect
-                                v-model.number="playerStatistic.rating"
+                                v-model="playerStatistic.rating"
                                 :items="selectPlayerRating"
                                 name="rating"
                                 size="sm"
@@ -235,7 +235,7 @@ export default {
         res.data.forEach(player => {
             if (!this.playerStatistics.find(p => p.player_id === player.id)) {
                 this.playerStatistics.push({
-                    rating: (0.0).toFixed(1),
+                    rating: null,
                     goals: 0,
                     assists: 0,
                     player_id: player.id,
@@ -246,7 +246,7 @@ export default {
 
         if (!this.game) {
             this.playerStatistics = res.data.map(player => ({
-                rating: (0.0).toFixed(1),
+                rating: null,
                 goals: 0,
                 assists: 0,
                 player_id: player.id,
