@@ -242,7 +242,8 @@ export default {
 
             return Object.values(playersObject)
                 .map(player => {
-                    player.rating = (player.rating / player.games).toFixed(2);
+                    const rating = parseFloat(player.rating).toFixed(1);
+                    player.rating = (rating / player.games).toFixed(1);
                     return player;
                 })
                 .sort((a, b) => b.rating - a.rating);

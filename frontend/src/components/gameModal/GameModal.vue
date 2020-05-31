@@ -228,9 +228,23 @@ export default {
             }));
 
             this.isNew = false;
-        } else {
-            const res = await apiClient('/team-players');
+        }
 
+        const res = await apiClient('/team-players');
+
+        res.data.forEach(player => {
+            if (!this.playerStatistics.find(p => p.player_id === player.id)) {
+                this.playerStatistics.push({
+                    rating: (0.0).toFixed(1),
+                    goals: 0,
+                    assists: 0,
+                    player_id: player.id,
+                    player: player
+                });
+            }
+        });
+
+        if (!this.game) {
             this.playerStatistics = res.data.map(player => ({
                 rating: (0.0).toFixed(1),
                 goals: 0,
