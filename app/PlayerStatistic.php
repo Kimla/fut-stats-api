@@ -8,6 +8,10 @@ class PlayerStatistic extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'rating' => 'decimal(10,1)',
+    ];
+
     public function game()
     {
         return $this->belongsTo('App\Game');
