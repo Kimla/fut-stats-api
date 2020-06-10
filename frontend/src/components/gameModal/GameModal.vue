@@ -224,7 +224,7 @@ export default {
             this.formData = { ...this.game };
             this.playerStatistics = this.game.player_statistics.map(playerStatistic => ({
                 ...playerStatistic,
-                rating: parseFloat(playerStatistic.rating).toFixed(1)
+                rating: playerStatistic.rating ? parseFloat(playerStatistic.rating).toFixed(1) : null
             }));
 
             this.isNew = false;
@@ -280,8 +280,8 @@ export default {
 
         async update () {
             const res = await apiClient.put(`/games/${this.game.id}`, {
-                playerStatistics: this.playerStatistics,
-                ...this.formData
+                ...this.formData,
+                playerStatistics: this.playerStatistics
             });
 
             return res;
@@ -289,8 +289,8 @@ export default {
 
         async add () {
             const res = await apiClient.post('/games', {
-                playerStatistics: this.playerStatistics,
-                ...this.formData
+                ...this.formData,
+                playerStatistics: this.playerStatistics
             });
 
             return res.data.id;
