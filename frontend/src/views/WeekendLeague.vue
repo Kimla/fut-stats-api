@@ -216,7 +216,7 @@ export default {
                 return game.player_statistics.map(playerStatistic => ({
                     id: playerStatistic.player.id,
                     name: playerStatistic.player.name,
-                    rating: playerStatistic.rating,
+                    rating: parseFloat(playerStatistic.rating),
                     goals: playerStatistic.goals,
                     assists: playerStatistic.assists
                 }));
