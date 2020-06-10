@@ -5,23 +5,28 @@
         </h1>
 
         <div class="mb-10 pb-10 border-b-2">
-            <div
-                v-for="player in players"
-                :key="player.id"
-                class="bg-white w-full flex items-center justify-between shadow py-2 px-4 mb-3 text-xl relative"
+            <draggable
+                v-model="players"
+                @end="updateSortOrder"
             >
-                <p class="pr-6">
-                    {{ player.name }}
-                </p>
-
-                <button
-                    type="button"
-                    class="text-gray-700"
-                    @click="removePlayer(player.id)"
+                <div
+                    v-for="player in players"
+                    :key="player.id"
+                    class="bg-white w-full flex items-center justify-between shadow py-2 px-4 mb-3 text-xl relative"
                 >
-                    <RemoveIcon class="w-6 h-6" />
-                </button>
-            </div>
+                    <p class="pr-6">
+                        {{ player.name }}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="text-gray-700"
+                        @click="removePlayer(player.id)"
+                    >
+                        <RemoveIcon class="w-6 h-6" />
+                    </button>
+                </div>
+            </draggable>
         </div>
 
         <div class="mb-10 pb-10 border-b-2">
@@ -54,6 +59,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import Button from '@/components/ui/Button';
 import RemoveIcon from '@/assets/x-circle.svg';
 import { apiClient } from '@/services/API';
@@ -61,7 +67,8 @@ import { apiClient } from '@/services/API';
 export default {
     components: {
         Button,
-        RemoveIcon
+        RemoveIcon,
+        draggable
     },
 
     data: () => ({
@@ -98,6 +105,17 @@ export default {
                 const index = this.players.indexOf(player);
                 this.players.splice(index, 1);
             }
+        },
+
+        async updateSortOrder () {
+            const res = await apiClient.put('/team-players/sort-order', {
+                players: this.players.map((player, index) => ({
+                    id: player.id,
+                    index: index
+                }))
+            });
+
+            console.log(res);
         }
     }
 };
