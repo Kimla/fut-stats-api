@@ -253,6 +253,8 @@ export default {
                 player: player
             }));
         }
+
+        this.playerStatistics = this.playerStatistics.sort((a, b) => a.player.sort_order - b.player.sort_order);
     },
 
     methods: {

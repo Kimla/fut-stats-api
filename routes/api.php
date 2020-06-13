@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/team-players', 'TeamPlayerController@index');
     Route::post('/team-players', 'TeamPlayerController@store');
+    Route::post('/team-players/sort-order', 'TeamPlayerController@updateSortOrder');
     Route::delete('/team-players/{teamPlayer}', 'TeamPlayerController@destroy');
 
     Route::get('/player-price-watch', 'PlayerPriceWatchController@index');
