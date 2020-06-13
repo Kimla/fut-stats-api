@@ -20,6 +20,7 @@ class TeamPlayerController extends Controller
         $player = TeamPlayer::create([
             'name' => request('name'),
             'user_id' => auth()->user()->id,
+            'sort_order' => 255,
         ]);
 
         return response()->json([
