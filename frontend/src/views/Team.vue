@@ -108,14 +108,12 @@ export default {
         },
 
         async updateSortOrder () {
-            const res = await apiClient.post('/team-players/sort-order', {
+            await apiClient.post('/team-players/sort-order', {
                 players: this.players.map((player, index) => ({
                     id: player.id,
                     sort_order: index
                 }))
             });
-
-            console.log(res);
         }
     }
 };
