@@ -7,6 +7,7 @@
         <div class="mb-10 pb-10 border-b-2">
             <draggable
                 v-model="players"
+                handle=".handle"
                 @end="updateSortOrder"
             >
                 <div
@@ -14,13 +15,13 @@
                     :key="player.id"
                     class="bg-white w-full flex items-center justify-between shadow py-2 px-4 mb-3 text-xl relative"
                 >
-                    <p class="pr-6">
+                    <p class="pr-6 w-full handle">
                         {{ player.name }}
                     </p>
 
                     <button
                         type="button"
-                        class="text-gray-700"
+                        class="text-gray-700 flex-shrink-0"
                         @click="removePlayer(player.id)"
                     >
                         <RemoveIcon class="w-6 h-6" />
