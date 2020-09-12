@@ -16,6 +16,7 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('weekend_league_id');
             $table->enum('outcome', ['win', 'loss']);
             $table->tinyInteger('goals');
             $table->tinyInteger('conceded');

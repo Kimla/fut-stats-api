@@ -16,6 +16,7 @@ class CreateTeamPlayersTable extends Migration
         Schema::create('team_players', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedTinyInteger('sort_order')->nullable();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

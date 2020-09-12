@@ -17,7 +17,7 @@ class CreatePlayerStatisticsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('player_id');
             $table->unsignedBigInteger('game_id');
-            $table->float('rating', 2, 1);
+            $table->decimal('rating', 10, 1)->change();
             $table->tinyInteger('goals');
             $table->tinyInteger('assists');
             $table->timestamps();
