@@ -1,13 +1,12 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\PlayerPriceWatchController;
+use App\Http\Controllers\TeamPlayerController;
+use App\Http\Controllers\WeekendLeagueController;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WeekendLeagueController;
-use App\Http\Controllers\TeamPlayerController;
-use App\Http\Controllers\PlayerPriceWatchController;
-use App\Http\Controllers\GameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +23,9 @@ Route::get('/sanctum/csrf-cookie', function () {
     return new Response('', 204);
 });
 
-Route::post('/auth/login', [UserController::class, 'login']);
-Route::post('/auth/logout', [UserController::class, 'logout']);
-Route::post('/auth/register', [UserController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
+Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/weekend-leagues', [WeekendLeagueController::class, 'index']);
@@ -34,8 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/weekend-leagues/{weekendLeague}', [WeekendLeagueController::class, 'get']);
     Route::delete('/weekend-leagues/{weekendLeague}', [WeekendLeagueController::class, 'destroy']);
 
-    Route::get('/team-players',  [TeamPlayerController::class, 'index']);
-    Route::post('/team-players',  [TeamPlayerController::class, 'store']);
+    Route::get('/team-players', [TeamPlayerController::class, 'index']);
+    Route::post('/team-players', [TeamPlayerController::class, 'store']);
     Route::post('/team-players/sort-order', [TeamPlayerController::class, 'updateSortOrder']);
     Route::delete('/team-players/{teamPlayer}', [TeamPlayerController::class, 'destroy']);
 
