@@ -24,7 +24,7 @@ class AuthController extends Controller
 
         Auth::guard()->login($user);
 
-        return $this->createNewToken(__('auth.register'));
+        return $this->authedResponse(__('auth.register'));
     }
 
     public function login(Request $request) : object
@@ -35,7 +35,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        return $this->createNewToken(__('auth.login'));
+        return $this->authedResponse(__('auth.login'));
     }
 
     public function logout() : object
@@ -47,7 +47,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    protected function createNewToken(string $message) : object
+    protected function authedResponse(string $message) : object
     {
         $user = Auth::user();
         $token = $user->createToken('token-name');
