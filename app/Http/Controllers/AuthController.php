@@ -47,6 +47,13 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function user()
+    {
+        return response()->json([
+            'user' => Auth::user(),
+        ], 200);
+    }
+
     protected function authedResponse(string $message) : object
     {
         $user = Auth::user();

@@ -28,6 +28,8 @@ Route::post('/auth/logout', [AuthController::class, 'logout']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/auth/user', [AuthController::class, 'user']);
+
     Route::get('/weekend-leagues', [WeekendLeagueController::class, 'index']);
     Route::post('/weekend-leagues', [WeekendLeagueController::class, 'store']);
     Route::get('/weekend-leagues/{weekendLeague}', [WeekendLeagueController::class, 'get']);

@@ -2,7 +2,9 @@
 
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\get;
+use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
@@ -160,4 +162,32 @@ test('can logout', function () {
         ->assertJson([
             'message' => __('auth.logout'),
         ]);
+});
+
+test('if not authed cant get user', function () {
+    $response = getJson('/api/auth/user');
+
+    $response
+        ->assertStatus(401)
+        ->assertJsonMissing($this->user->toArray());
+});
+
+test('if authed can get user', function () {
+    Sanctum::actingAs($this->user);
+
+    $response = getJson('/api/auth/user');
+
+    $response
+        ->assertStatus(200)
+        ->assertJsonFragment($this->user->toArray());
+});
+
+test('if authed cant get other users', function () {
+    $otherUser = User::factory()->create();
+
+    Sanctum::actingAs($this->user);
+
+    $response = getJson('/api/auth/user');
+
+    $response->assertJsonMissing($otherUser->toArray());
 });
