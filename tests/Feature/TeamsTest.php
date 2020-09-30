@@ -1,5 +1,6 @@
 <?php
 
+use App\Player;
 use App\Team;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,8 +15,11 @@ beforeEach(function () {
 test('a user can create teams', function () {
     Sanctum::actingAs($this->user);
 
+    $players = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
     $response = $this->postJson('/api/teams', [
         'name' => 'My team',
+        'players' => $players,
     ]);
 
     $response
@@ -31,12 +35,25 @@ test('a user can create teams', function () {
         'user_id' => $this->user->id,
         'name' => 'My team',
     ]);
+
+    $test = $players->map(function ($id) use ($response) {
+        return [
+            'team_id' => '1',
+            'player_id' => (string) $id,
+        ];
+    })->all();
+
+    $this->assertDatabaseCount('team_player', 11);
 });
 
-test('a user cant create teams without a name', function () {
+test('team requires a name', function () {
     Sanctum::actingAs($this->user);
 
-    $response = $this->postJson('/api/teams');
+    $players = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
+    $response = $this->postJson('/api/teams', [
+        'players' => $players,
+    ]);
 
     $response
         ->assertStatus(422)
@@ -48,6 +65,55 @@ test('a user cant create teams without a name', function () {
     $this->assertDatabaseMissing('teams', [
         'user_id' => $this->user->id,
     ]);
+});
+
+test('team must have eleven players', function () {
+    Sanctum::actingAs($this->user);
+
+    $response = $this->postJson('/api/teams', [
+        'name' => 'My team',
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['players'],
+        ]);
+
+    $players = Player::factory()->count(4)->create(['user_id' => $this->user->id])->pluck('id');
+
+    $response = $this->postJson('/api/teams', [
+        'name' => 'My team',
+        'players' => $players,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['players'],
+        ]);
+
+    $players = Player::factory()->count(12)->create(['user_id' => $this->user->id])->pluck('id');
+
+    $response = $this->postJson('/api/teams', [
+        'name' => 'My team',
+        'players' => $players,
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['players'],
+        ]);
+
+    $this->assertDatabaseMissing('teams', [
+        'user_id' => $this->user->id,
+    ]);
+
+    $this->assertDatabaseCount('team_player', 0);
 });
 
 test('a guest cant create teams', function () {
@@ -134,13 +200,16 @@ test('guests cant get teams', function () {
     $response->assertStatus(401);
 });
 
-test('a user can update their team', function () {
+test('a user can update their team name', function () {
     Sanctum::actingAs($this->user);
 
     $team = Team::factory()->create(['user_id' => $this->user->id]);
 
+    $players = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
     $response = $this->putJson("/api/teams/{$team->id}", [
         'name' => 'Changed',
+        'players' => $players,
     ]);
 
     $response
@@ -151,6 +220,39 @@ test('a user can update their team', function () {
                 'name' => 'Changed',
             ],
         ]);
+});
+
+test('a user can update their team players', function () {
+    Sanctum::actingAs($this->user);
+
+    $players = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
+    $team = Team::factory()->create(['user_id' => $this->user->id]);
+    $team->players()->attach($players);
+
+    $oldPlayers = $team->players->pluck('id');
+
+    $newPlayers = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
+    $response = $this->putJson("/api/teams/{$team->id}", [
+        'name' => 'Changed',
+        'players' => $newPlayers,
+    ]);
+
+    $response
+        ->assertStatus(200)
+        ->assertJson([
+            'message' => __('teams.updated'),
+            'team' => [
+                'name' => 'Changed',
+            ],
+        ]);
+
+    $this->assertNotEquals($oldPlayers, $newPlayers);
+
+    $this->assertEquals($oldPlayers, $team->players->pluck('id'));
+
+    $this->assertDatabaseCount('team_player', 11);
 });
 
 test('a user cant update their team without a name', function () {
@@ -170,14 +272,49 @@ test('a user cant update their team without a name', function () {
     $this->assertDatabaseHas('teams', $team->toArray());
 });
 
+test('a user cant update their team without exacly eleven players', function () {
+    Sanctum::actingAs($this->user);
+
+    $team = Team::factory()->create(['user_id' => $this->user->id]);
+    $players = Player::factory()->count(20)->create(['user_id' => $this->user->id])->pluck('id');
+    $team->players()->attach($players->take(11));
+
+    $response = $this->putJson("/api/teams/{$team->id}", [
+        'name' => $team->name,
+        'players' => $players->take(4),
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['players'],
+        ]);
+
+    $response = $this->putJson("/api/teams/{$team->id}", [
+        'name' => $team->name,
+        'players' => $players->take(12),
+    ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['players'],
+        ]);
+});
+
 test('a user cant update other teams', function () {
     Sanctum::actingAs($this->user);
 
     $otherUser = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $otherUser->id]);
 
+    $players = Player::factory()->count(11)->create(['user_id' => $this->user->id])->pluck('id');
+
     $response = $this->putJson("/api/teams/{$team->id}", [
         'name' => 'Changed',
+        'players' => $players,
     ]);
 
     $response->assertStatus(403);

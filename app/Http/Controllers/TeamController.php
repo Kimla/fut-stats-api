@@ -23,6 +23,8 @@ class TeamController extends Controller
             'name' => request('name'),
         ]);
 
+        $team->players()->attach(request('players'));
+
         return response()->json([
             'message' => __('teams.created'),
             'team' => $team,
@@ -38,6 +40,8 @@ class TeamController extends Controller
         $team->update([
             'name' => request('name'),
         ]);
+
+        $team->players()->sync(request('players'));
 
         return response()->json([
             'message' => __('teams.updated'),
@@ -60,6 +64,7 @@ class TeamController extends Controller
     {
         request()->validate([
             'name' => ['required', 'string', 'max:255'],
+            'players' => ['required', 'array', 'size:11'],
         ]);
     }
 }

@@ -15,4 +15,9 @@ class Player extends Model
     protected $hidden = [
         'user_id', 'updated_at', 'created_at',
     ];
+
+    public function teams()
+    {
+        return $this->belongsToMany('App\Team', 'team_player');
+    }
 }
