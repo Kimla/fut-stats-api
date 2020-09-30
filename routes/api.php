@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\TeamPlayerController;
 use App\Http\Controllers\WeekendLeagueController;
 use Illuminate\Http\Response;
@@ -28,6 +29,11 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/auth/user', [AuthController::class, 'user']);
+
+    Route::get('/players', [PlayerController::class, 'index']);
+    Route::post('/players', [PlayerController::class, 'store']);
+    Route::put('/players/{player}', [PlayerController::class, 'update']);
+    Route::delete('/players/{player}', [PlayerController::class, 'destroy']);
 
     Route::get('/weekend-leagues', [WeekendLeagueController::class, 'index']);
     Route::post('/weekend-leagues', [WeekendLeagueController::class, 'store']);
