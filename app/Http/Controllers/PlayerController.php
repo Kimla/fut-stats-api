@@ -19,9 +19,8 @@ class PlayerController extends Controller
     {
         $this->validateRequest();
 
-        $player = Player::create([
+        $player = Auth::user()->players()->create([
             'name' => request('name'),
-            'user_id' => Auth::user()->id,
         ]);
 
         return response()->json([
