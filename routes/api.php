@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\PlayerPriceWatchController;
 use App\Http\Controllers\TeamPlayerController;
 use App\Http\Controllers\WeekendLeagueController;
 use Illuminate\Http\Response;
@@ -39,11 +38,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/team-players', [TeamPlayerController::class, 'store']);
     Route::post('/team-players/sort-order', [TeamPlayerController::class, 'updateSortOrder']);
     Route::delete('/team-players/{teamPlayer}', [TeamPlayerController::class, 'destroy']);
-
-    Route::get('/player-price-watch', [PlayerPriceWatchController::class, 'index']);
-    Route::post('/player-price-watch', [PlayerPriceWatchController::class, 'store']);
-    Route::get('/player-price-watch/{playerPriceWatch}', [PlayerPriceWatchController::class, 'update']);
-    Route::delete('/player-price-watch/{playerPriceWatch}', [PlayerPriceWatchController::class, 'destroy']);
 
     Route::get('/games', [GameController::class, 'index']);
     Route::post('/games', [GameController::class, 'store']);
