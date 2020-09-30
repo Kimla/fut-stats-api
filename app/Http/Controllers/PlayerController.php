@@ -36,8 +36,9 @@ class PlayerController extends Controller
 
         $this->authorize('owner', $player);
 
-        $player->name = request('name');
-        $player->save();
+        $player->update([
+            'name' => request('name'),
+        ]);
 
         return response()->json([
             'message' => __('players.updated'),
