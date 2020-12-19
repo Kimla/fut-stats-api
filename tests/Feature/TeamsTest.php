@@ -337,3 +337,45 @@ test('a guest cant update teams', function () {
         'name' => 'Changed',
     ]);
 });
+
+test('a user can add a player to their team', function () {
+    $this->withoutExceptionHandling();
+
+    Sanctum::actingAs($this->user);
+
+    $team = Team::factory()->create();
+
+    $player = Player::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->postJson("/api/teams/{$team->id}/players", [
+        'player' => $player->id,
+    ]);
+
+    $response->assertStatus(200);
+
+    $this->assertDatabaseHas('team_player', [
+        'player_id' => $player->id,
+    ]);
+});
+
+test('a user can remove a player from their team', function () {
+    $this->withoutExceptionHandling();
+
+    Sanctum::actingAs($this->user);
+
+    $team = Team::factory()->create();
+
+    $player = Player::factory()->create(['user_id' => $this->user->id]);
+
+    $team->players()->attach($player->id);
+
+    $response = $this->deleteJson("/api/teams/{$team->id}/players", [
+        'player' => $player->id,
+    ]);
+
+    $response->assertStatus(200);
+
+    $this->assertDatabaseMissing('team_player', [
+        'player_id' => $player->id,
+    ]);
+});

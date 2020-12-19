@@ -60,6 +60,32 @@ class TeamController extends Controller
         ], 200);
     }
 
+    public function addPlayer(Team $team)
+    {
+        request()->validate([
+            'player' => ['required', 'integer'],
+        ]);
+
+        $team->players()->attach(request('player'));
+
+        return response()->json([
+            'message' => __('teams.playerAdded'),
+        ], 200);
+    }
+
+    public function removePlayer(Team $team)
+    {
+        request()->validate([
+            'player' => ['required', 'integer'],
+        ]);
+
+        $team->players()->detach(request('player'));
+
+        return response()->json([
+            'message' => __('teams.playerRemoved'),
+        ], 200);
+    }
+
     protected function validateRequest()
     {
         request()->validate([

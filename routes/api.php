@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/teams', [TeamController::class, 'store']);
     Route::put('/teams/{team}', [TeamController::class, 'update']);
     Route::delete('/teams/{team}', [TeamController::class, 'destroy']);
+    Route::post('/teams/{team}/players', [TeamController::class, 'addPlayer']);
+    Route::delete('/teams/{team}/players', [TeamController::class, 'removePlayer']);
 
     Route::get('/weekend-leagues', [WeekendLeagueController::class, 'index']);
     Route::post('/weekend-leagues', [WeekendLeagueController::class, 'store']);
