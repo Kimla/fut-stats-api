@@ -24,5 +24,5 @@ if (file_exists(__DIR__.'/public'.$uri)) {
 if (strpos($uri, 'api') !== false) {
     require_once __DIR__.'/public/api.php';
 } else {
-    readfile(__DIR__.'/public/index.html');
+    readfile(__DIR__.'/dist/index.html');
 }
