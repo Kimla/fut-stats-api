@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Player;
-use App\User;
+use App\Models\Player;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 

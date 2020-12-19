@@ -1,8 +1,8 @@
 <?php
 
-use App\Player;
-use App\Team;
-use App\User;
+use App\Models\Player;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
@@ -129,6 +129,8 @@ test('a guest cant create teams', function () {
 });
 
 test('a user can delete their team', function () {
+    $this->withoutExceptionHandling();
+
     Sanctum::actingAs($this->user);
 
     $team = Team::factory()->create(['user_id' => $this->user->id]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +18,6 @@ class Team extends Model
 
     public function players()
     {
-        return $this->belongsToMany('App\Player', 'team_player');
+        return $this->belongsToMany('App\Models\Player', 'team_player');
     }
 }

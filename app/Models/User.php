@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -40,11 +40,11 @@ class User extends Authenticatable
 
     public function players()
     {
-        return $this->hasMany('App\Player');
+        return $this->hasMany('App\Models\Player');
     }
 
     public function teams()
     {
-        return $this->hasMany('App\Team');
+        return $this->hasMany('App\Models\Team');
     }
 }
