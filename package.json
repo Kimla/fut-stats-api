@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "vite ./resources",
-    "copy": "cp -r ./dist/_assets ./public/ && cp -r ./dist/index.html ./public/",
     "build": "cross-env NODE_ENV=production vite build ./resources --debug"
   },
   "dependencies": {
